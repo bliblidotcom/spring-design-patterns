@@ -19,9 +19,20 @@ public class ObserverApplication {
 
   }
 
+  public static class Customer {
+
+  }
+
   public static class ProductEvent extends ApplicationEvent {
 
     public ProductEvent(Product source) {
+      super(source);
+    }
+  }
+
+  public static class CustomerEvent extends ApplicationEvent {
+
+    public CustomerEvent(Customer source) {
       super(source);
     }
   }
@@ -31,14 +42,15 @@ public class ObserverApplication {
     @Setter
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void save(Product product){
+    public void save(Product product) {
       System.out.println("Done save to database");
       applicationEventPublisher.publishEvent(new ProductEvent(product));
+      applicationEventPublisher.publishEvent(new CustomerEvent(new Customer()));
     }
 
   }
 
-  public static class MessageBrokerObserver implements ApplicationListener<ProductEvent>{
+  public static class MessageBrokerObserver implements ApplicationListener<ProductEvent> {
 
     @Override
     public void onApplicationEvent(ProductEvent event) {
@@ -46,15 +58,19 @@ public class ObserverApplication {
     }
   }
 
-  public static class RedisObserver implements ApplicationListener<ApplicationEvent>{
+  public static class RedisObserver implements ApplicationListener<ApplicationEvent> {
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-      System.out.println("Kirim ke redis server");
+      if (event instanceof ProductEvent) {
+        System.out.println("Kirim product ke redis server");
+      } else if (event instanceof CustomerEvent) {
+        System.out.println("Kirim customer ke redis server");
+      }
     }
   }
 
-  public static class LogObserver implements ApplicationListener<ProductEvent>{
+  public static class LogObserver implements ApplicationListener<ProductEvent> {
 
     @Override
     public void onApplicationEvent(ProductEvent event) {
@@ -66,21 +82,21 @@ public class ObserverApplication {
   public static class Application {
 
     @Bean
-    public ProductRepository productRepository(){
+    public ProductRepository productRepository() {
       return new ProductRepository();
     }
 
     @Bean
-    public MessageBrokerObserver messageBrokerObserver(){
+    public MessageBrokerObserver messageBrokerObserver() {
       return new MessageBrokerObserver();
     }
 
-    public RedisObserver redisObserver(){
+    public RedisObserver redisObserver() {
       return new RedisObserver();
     }
 
     @Bean
-    public LogObserver logObserver(){
+    public LogObserver logObserver() {
       return new LogObserver();
     }
 
