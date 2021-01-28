@@ -1,3 +1,9 @@
 GET http://localhost:8080/
 X-API: secret
 Accept: application/json
+
+###
+
+GET http://localhost:8080/actuator/health
+X-API: secret
+Accept: application/json
