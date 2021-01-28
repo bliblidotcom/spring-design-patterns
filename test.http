@@ -7,3 +7,21 @@ Accept: application/json
 GET http://localhost:8080/actuator/health
 X-API: secret
 Accept: application/json
+
+###
+
+GET http://localhost:8080/api/members/12345
+Accept: application/json
+X-Request-Id: requestId
+X-User-Id: eko
+X-Timestamp: 1221324312
+X-Service-Id: frontend
+
+###
+
+GET http://localhost:8080/api/members2/12345
+Accept: application/json
+X-Request-Id: requestId
+X-User-Id: eko
+X-Timestamp: 1221324312
+X-Service-Id: frontend
